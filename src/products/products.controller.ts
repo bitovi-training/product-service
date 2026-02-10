@@ -7,17 +7,21 @@ import {
   ParseIntPipe,
   Post,
   UseGuards,
-} from '@nestjs/common';
-import { CreateProductDto } from './dto/create-product.dto';
-import { ProductsService } from './products.service';
-import type { Product } from './entities/product.entity';
-import { AuthGuard, RequireRolesGuard, Roles } from '@bitovi-corp/auth-middleware';
+} from "@nestjs/common";
+import { CreateProductDto } from "./dto/create-product.dto";
+import { ProductsService } from "./products.service";
+import type { Product } from "./entities/product.entity";
+import {
+  AuthGuard,
+  RequireRolesGuard,
+  Roles,
+} from "@bitovi-corp/auth-middleware";
 
-@Controller('products')
+@Controller("products")
 export class ProductsController {
   private readonly logger = new Logger(ProductsController.name);
 
-  constructor(private readonly productsService: ProductsService) { }
+  constructor(private readonly productsService: ProductsService) {}
 
   @Get()
   findAll() {
@@ -27,18 +31,17 @@ export class ProductsController {
   }
 
   @UseGuards(AuthGuard)
-  @Get(':id')
-  findOne(@Param('id', ParseIntPipe) id: string): Product {
-    const numericId = Number(id);
-    this.logger.log(`GET /products/${numericId} - Fetching product details`);
+  @Get(":id")
+  findOne(@Param("id", ParseIntPipe) id: number): Product {
+    this.logger.log(`GET /products/${id} - Fetching product details`);
 
     try {
-      const product = this.productsService.findOne(numericId);
-      this.logger.log(`GET /products/${numericId} - Product found`);
+      const product = this.productsService.findOne(id);
+      this.logger.log(`GET /products/${id} - Product found`);
       return product;
     } catch (error) {
       this.logger.error(
-        `GET /products/${numericId} - Product not found`,
+        `GET /products/${id} - Product not found`,
         error instanceof Error ? error.stack : undefined,
       );
       throw error;
@@ -46,10 +49,10 @@ export class ProductsController {
   }
 
   @UseGuards(AuthGuard, RequireRolesGuard)
-  @Roles('admin')
+  @Roles("admin")
   @Post()
   create(@Body() payload: CreateProductDto): Product {
-    this.logger.log('POST /products - Creating product');
+    this.logger.log("POST /products - Creating product");
     const product = this.productsService.create(payload);
     this.logger.log(`POST /products - Created product ${product.id}`);
     return product;

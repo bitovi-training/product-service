@@ -91,7 +91,7 @@ describe('ProductsController', () => {
 
       mockProductsService.findOne.mockReturnValue(mockProduct);
 
-      const result = controller.findOne('1');
+      const result = controller.findOne(1);
 
       expect(result).toEqual(mockProduct);
       expect(mockProductsService.findOne).toHaveBeenCalledWith(1);
@@ -106,7 +106,7 @@ describe('ProductsController', () => {
         availability: false,
       });
 
-      controller.findOne('2');
+      controller.findOne(2);
 
       expect(mockProductsService.findOne).toHaveBeenCalledWith(2);
       expect(mockProductsService.findOne).toHaveBeenCalledTimes(1);
