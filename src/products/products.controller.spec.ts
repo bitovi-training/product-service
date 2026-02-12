@@ -3,7 +3,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ProductsController } from './products.controller';
 import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
-import { JwtParserService } from '@bitovi-corp/auth-middleware';
+import { AuthGuard, RequireRolesGuard } from '@bitovi-corp/auth-middleware';
 
 describe('ProductsController', () => {
   let controller: ProductsController;
@@ -14,10 +14,6 @@ describe('ProductsController', () => {
     create: jest.fn(),
   };
 
-  const mockJwtParserService = {
-    parse: jest.fn(),
-  };
-
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [ProductsController],
@@ -26,12 +22,13 @@ describe('ProductsController', () => {
           provide: ProductsService,
           useValue: mockProductsService,
         },
-        {
-          provide: JwtParserService,
-          useValue: mockJwtParserService,
-        },
       ],
-    }).compile();
+    })
+      .overrideGuard(AuthGuard)
+      .useValue({ canActivate: () => true })
+      .overrideGuard(RequireRolesGuard)
+      .useValue({ canActivate: () => true })
+      .compile();
 
     controller = module.get<ProductsController>(ProductsController);
   });
@@ -94,7 +91,7 @@ describe('ProductsController', () => {
 
       mockProductsService.findOne.mockReturnValue(mockProduct);
 
-      const result = controller.findOne('1');
+      const result = controller.findOne(1);
 
       expect(result).toEqual(mockProduct);
       expect(mockProductsService.findOne).toHaveBeenCalledWith(1);
@@ -109,7 +106,7 @@ describe('ProductsController', () => {
         availability: false,
       });
 
-      controller.findOne('2');
+      controller.findOne(2);
 
       expect(mockProductsService.findOne).toHaveBeenCalledWith(2);
       expect(mockProductsService.findOne).toHaveBeenCalledTimes(1);

@@ -69,6 +69,8 @@ export class ProductsService {
       availability: payload.availability ?? true,
     };
 
+    this.products.push(product);
+
     return product;
   }
 }
