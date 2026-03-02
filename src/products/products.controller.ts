@@ -15,7 +15,7 @@ import {
   AuthGuard,
   RequireRolesGuard,
   Roles,
-} from "@bitovi-corp/auth-middleware";
+} from "@bitovi-training/auth-middleware";
 
 @Controller("products")
 export class ProductsController {

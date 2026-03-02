@@ -3,7 +3,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ProductsController } from './products.controller';
 import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
-import { AuthGuard, RequireRolesGuard } from '@bitovi-corp/auth-middleware';
+import { AuthGuard, RequireRolesGuard } from '@bitovi-training/auth-middleware';
 
 describe('ProductsController', () => {
   let controller: ProductsController;

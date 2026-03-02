@@ -12,7 +12,7 @@ NestJS service that exposes a minimal catalog API for products. This service is 
 
 ## Auth
 
-Authentication and role enforcement is handled via `@bitovi-corp/auth-middleware`.
+Authentication and role enforcement is handled via `@bitovi-training/auth-middleware`.
 
 ## Running locally
 
